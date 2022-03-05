@@ -10,6 +10,8 @@ services:
       - '5432:5432'
     environment:
       - POSTGRES_DB=nfl-rushing
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - './db/data:/var/lib/postgresql/data/'
+      - './db/init:/docker-entrypoint-initdb.d'
