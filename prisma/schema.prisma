@@ -9,27 +9,26 @@ datasource db {
 
 model Player {
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   team String?
-  pos String?
+  position String?
   stats RushingStats?
 }
 
 model RushingStats {
   id Int @id @default(autoincrement())
   player Player @relation(fields: [playerId], references: [id])
-  playerId Int
+  playerId Int @unique
   att Int?
-  att_per_game Int?
+  att_per_game Float?
   yards Int?
-  avg Int?
-  yardsPerGame Int?
+  avg Float?
+  yardsPerGame Float?
+  touchdowns Int?
   longest String?
   firstDowns Int?
-  firstDownPercent Int?
+  firstDownPercent Float?
   twentyPlus Int?
   fortyPlus Int?
   fumbles Int?
 }
-
-
