@@ -24,7 +24,7 @@ async function main() {
           }
         },
         att: playerObject['Att'],
-        att_per_game: playerObject['Att/G'],
+        attPerGame: playerObject['Att/G'],
         yards: isNaN(playerObject['Yds'].toString().replace(',', '')) 
           ? null
           : Number(playerObject['Yds'].toString().replace(',', '')),
