@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef, useEffect } from "react"
 import { FixedSizeList as List } from "react-window"
 import { useTable, useBlockLayout, useSortBy, useFilters } from 'react-table'
 import FilterInput from "./FilterInput"
+import ExportCSV from "./ExportCSV"
 
 function PlayerTable({ data, columns }) {
   const {
@@ -11,7 +12,8 @@ function PlayerTable({ data, columns }) {
     rows,
     prepareRow,
     totalColumnsWidth,
-    setFilter
+    setFilter,
+    state
   } = useTable(
     {
       columns,
@@ -47,9 +49,12 @@ function PlayerTable({ data, columns }) {
     [prepareRow, rows]
   )
 
+  const generateCsvData = () => rows.map(row => row.original)
+
   return (
     <div className="w-full flex flex-col items-center">
       <FilterInput setFilter={setFilter} filterName="name" label="Player Name" />
+      <ExportCSV rows={rows} />
       <div {...getTableProps()} className="inline-block border border-black m-4 overflow-x-auto w-11/12 no-scrollbar">
         <div>
           {headerGroups.map((headerGroup, index) => (
