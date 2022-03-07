@@ -1,76 +1,70 @@
-const playerTableHeaderStrings = [
-  'Player Name',
-  'Team',
-  'Position',
-  'Rushing Attempts Per Game Average',
-  'Rushing Attempts',
-  'Total Rushing Yards',
-  'Rushing Average Yards Per Attempt',
-  'Rushing Yards Per Game',
-  'Total Rushing Touchdowns',
-  'Rushing First Downs',
-  'Rushing First Down Percentage',
-  'Rushing 20+ Yards Each',
-  'Rushing 40+ Yards Each',
-  'Rushing Fumbles'
-]
+import { useCallback } from "react"
+import { FixedSizeList as List } from "react-window"
+import { useTable, useBlockLayout } from 'react-table'
 
-function PlayerTable({ players }) {
-  const generateTableHeaders = () => {
-    return playerTableHeaderStrings.map((headerString) => (
-      <th
-        key={headerString}
-        scope="col"
-        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-      >
-        {headerString}
-      </th>
-    ))
-  }
+function PlayerTable({ data, columns }) {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    totalColumnsWidth
+  } = useTable(
+    {
+      columns,
+      data
+    },
+    useBlockLayout
+  )
 
-  const generatePlayerRows = () => {
-    console.log(players)
-    return players.map((player) => (
-      <tr key={player.id}>
-        {
-          [
-            player.name,
-            player.team,
-            player.position,
-            player.stats.attPerGame,
-            player.stats.att,
-            player.stats.yards,
-            player.stats.avg,
-            player.stats.yardsPerGame,
-            player.stats.touchdowns,
-            player.stats.firstDowns,
-            player.stats.firstDownPercent,
-            player.stats.twentyPlus,
-            player.stats.fortyPlus,
-            player.stats.fumbles
-          ].map(playerStat => <td key={playerStat} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{playerStat}</td>)
-        }
-      </tr>
-    ))
-  }
+  const PlayerRow = useCallback(
+    ({ index, style }) => {
+      const row = rows[index]
+      prepareRow(row)
+
+      return (
+        <div
+          {...row.getRowProps({
+            style,
+          })}
+        >
+          {row.cells.map((cell, index) => {
+            return (
+              <div key={index} {...cell.getCellProps()}>
+                {cell.render('Cell')}
+              </div>
+            )
+          })}
+        </div>
+      )
+    },
+    [prepareRow, rows]
+  )
 
   return (
-    <div className="flex flex-col">
-      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  {generateTableHeaders()}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {generatePlayerRows()}
-              </tbody>
-            </table>
+    <div {...getTableProps()} className="inline-block border border-black">
+      <div>
+        {headerGroups.map((headerGroup, index) => (
+          <div key={index} {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column, index) => (
+              <div key={index} {...column.getHeaderProps()}>
+                {column.render('Header')}
+              </div>
+            ))}
           </div>
-        </div>
+        ))}
+      </div>
+
+      <div {...getTableBodyProps()}>
+        <List
+          height={800}
+          width={totalColumnsWidth}
+          itemCount={data.length}
+          itemSize={55}
+        >
+          {PlayerRow}
+        </List>
       </div>
     </div>
   )
