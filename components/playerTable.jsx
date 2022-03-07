@@ -1,7 +1,6 @@
-import { useCallback, useMemo } from "react"
+import { useCallback, useMemo, useRef, useEffect } from "react"
 import { FixedSizeList as List } from "react-window"
 import { useTable, useBlockLayout } from 'react-table'
-import scrollbarWidth from "../util/scrollBarWidth"
 
 function PlayerTable({ data, columns }) {
   const {
@@ -19,8 +18,6 @@ function PlayerTable({ data, columns }) {
     useBlockLayout
   )
 
-  const scrollBarSize = useMemo(() => scrollbarWidth(), [])
-
   const PlayerRow = useCallback(
     ({ index, style }) => {
       const row = rows[index]
@@ -35,7 +32,7 @@ function PlayerTable({ data, columns }) {
         >
           {row.cells.map((cell, index) => {
             return (
-              <div key={index} {...cell.getCellProps()} className="flex items-center">
+              <div key={index} {...cell.getCellProps()} className="flex items-center pl-2 pr-2">
                 {cell.render('Cell')}
               </div>
             )
@@ -47,12 +44,12 @@ function PlayerTable({ data, columns }) {
   )
 
   return (
-    <div {...getTableProps()} className="inline-block border border-black m-4">
+    <div {...getTableProps()} className="inline-block border border-black m-4 overflow-x-auto w-11/12 no-scrollbar">
       <div>
         {headerGroups.map((headerGroup, index) => (
           <div key={index} {...headerGroup.getHeaderGroupProps()} className="p-2 bg-slate-300">
             {headerGroup.headers.map((column, index) => (
-              <div key={index} {...column.getHeaderProps()} className="flex items-center">
+              <div key={index} {...column.getHeaderProps()} className="flex items-center pl-2 pr-2">
                 {column.render('Header')}
               </div>
             ))}
@@ -62,8 +59,9 @@ function PlayerTable({ data, columns }) {
 
       <div {...getTableBodyProps()}>
         <List
+          className="no-scrollbar"
           height={800}
-          width={totalColumnsWidth + scrollBarSize}
+          width={totalColumnsWidth}
           itemCount={data.length}
           itemSize={55}
         >

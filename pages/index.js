@@ -71,7 +71,9 @@ function Home({ players }) {
   }), [players])
 
   return (
-    <PlayerTable columns={columns} data={data} />
+    <div className="flex justify-center no-scrollbar">
+      <PlayerTable columns={columns} data={data} />
+    </div>
   )
 }
 
