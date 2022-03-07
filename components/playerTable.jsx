@@ -1,6 +1,7 @@
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import { FixedSizeList as List } from "react-window"
 import { useTable, useBlockLayout } from 'react-table'
+import scrollbarWidth from "../util/scrollBarWidth"
 
 function PlayerTable({ data, columns }) {
   const {
@@ -18,6 +19,8 @@ function PlayerTable({ data, columns }) {
     useBlockLayout
   )
 
+  const scrollBarSize = useMemo(() => scrollbarWidth(), [])
+
   const PlayerRow = useCallback(
     ({ index, style }) => {
       const row = rows[index]
@@ -28,10 +31,11 @@ function PlayerTable({ data, columns }) {
           {...row.getRowProps({
             style,
           })}
+          className="pl-2 pr-2"
         >
           {row.cells.map((cell, index) => {
             return (
-              <div key={index} {...cell.getCellProps()}>
+              <div key={index} {...cell.getCellProps()} className="flex items-center">
                 {cell.render('Cell')}
               </div>
             )
@@ -43,12 +47,12 @@ function PlayerTable({ data, columns }) {
   )
 
   return (
-    <div {...getTableProps()} className="inline-block border border-black">
+    <div {...getTableProps()} className="inline-block border border-black m-4">
       <div>
         {headerGroups.map((headerGroup, index) => (
-          <div key={index} {...headerGroup.getHeaderGroupProps()}>
+          <div key={index} {...headerGroup.getHeaderGroupProps()} className="p-2 bg-slate-300">
             {headerGroup.headers.map((column, index) => (
-              <div key={index} {...column.getHeaderProps()}>
+              <div key={index} {...column.getHeaderProps()} className="flex items-center">
                 {column.render('Header')}
               </div>
             ))}
@@ -59,7 +63,7 @@ function PlayerTable({ data, columns }) {
       <div {...getTableBodyProps()}>
         <List
           height={800}
-          width={totalColumnsWidth}
+          width={totalColumnsWidth + scrollBarSize}
           itemCount={data.length}
           itemSize={55}
         >
