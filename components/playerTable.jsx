@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useEffect } from "react"
 import { FixedSizeList as List } from "react-window"
-import { useTable, useBlockLayout } from 'react-table'
+import { useTable, useBlockLayout, useSortBy, useFilters } from 'react-table'
+import FilterInput from "./FilterInput"
 
 function PlayerTable({ data, columns }) {
   const {
@@ -9,13 +10,16 @@ function PlayerTable({ data, columns }) {
     headerGroups,
     rows,
     prepareRow,
-    totalColumnsWidth
+    totalColumnsWidth,
+    setFilter
   } = useTable(
     {
       columns,
       data
     },
-    useBlockLayout
+    useFilters,
+    useSortBy,
+    useBlockLayout,
   )
 
   const PlayerRow = useCallback(
@@ -44,29 +48,32 @@ function PlayerTable({ data, columns }) {
   )
 
   return (
-    <div {...getTableProps()} className="inline-block border border-black m-4 overflow-x-auto w-11/12 no-scrollbar">
-      <div>
-        {headerGroups.map((headerGroup, index) => (
-          <div key={index} {...headerGroup.getHeaderGroupProps()} className="p-2 bg-slate-300">
-            {headerGroup.headers.map((column, index) => (
-              <div key={index} {...column.getHeaderProps()} className="flex items-center pl-2 pr-2">
-                {column.render('Header')}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+    <div className="w-full flex flex-col items-center">
+      <FilterInput setFilter={setFilter} filterName="name" label="Player Name" />
+      <div {...getTableProps()} className="inline-block border border-black m-4 overflow-x-auto w-11/12 no-scrollbar">
+        <div>
+          {headerGroups.map((headerGroup, index) => (
+            <div key={index} {...headerGroup.getHeaderGroupProps()} className="p-2 bg-slate-300">
+              {headerGroup.headers.map((column, index) => (
+                <div key={index} {...column.getHeaderProps(column.getSortByToggleProps())} className="flex items-center pl-2 pr-2">
+                  {column.render('Header')}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
 
-      <div {...getTableBodyProps()}>
-        <List
-          className="no-scrollbar"
-          height={800}
-          width={totalColumnsWidth}
-          itemCount={data.length}
-          itemSize={55}
-        >
-          {PlayerRow}
-        </List>
+        <div {...getTableBodyProps()}>
+          <List
+            className="no-scrollbar"
+            height={800}
+            width={totalColumnsWidth}
+            itemCount={rows.length}
+            itemSize={55}
+          >
+            {PlayerRow}
+          </List>
+        </div>
       </div>
     </div>
   )
