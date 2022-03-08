@@ -90,3 +90,27 @@ npm run dev
 to start the development server.
 
 When the server is up, navigate to `https://localhost:3000`
+
+### Technical features and decision making
+
+Given the scaling requirement is only on the order of 10k records, I made the decision to offload sorting and csv compilation to the client, removing the need for server communication post load entirely. 
+
+So there's no loading time on the initial load, I've made use of static generation through NextJS.
+
+To avoid rendering 10k+ table rows at once and destroying performance, I've made use of virtualization with react-window.
+
+All columns are sortable in ascending or descending order through react-table. Simply click on a column header to sort by that column.
+
+Filter input debounce of 300ms to reduce unneeded filtering and increase performance
+
+### What could be better
+
+Testing: There's very minimal testing here. Integrating React testing library with react-table is the next step here.
+
+Component Decomposition: The PlayerTable component especially is a little bloated. Table rows and cells could be easily decomposed, especially if more table interaction is required.
+
+Style Management: I've gone with Tailwindcss for ease of development, but the styles are messy and all over the place. Centralizing some of the more broadly used styles may help with this.
+
+Linting: The only linting configuration is what came out of the box with NextJS. A more robust linting configuration would be nice.
+
+Type Safety: Adding TypeScript, or PropTypes at the very least, would be great to reduce bugs and improve the development experience.
