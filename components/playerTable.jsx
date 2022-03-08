@@ -60,12 +60,14 @@ function PlayerTable({ data, columns }) {
       >
         <div>
           {headerGroups.map((headerGroup, index) => (
-            <div key={index} {...headerGroup.getHeaderGroupProps()} className="p-2 bg-scoreblue-100">
+            <div key={index} {...headerGroup.getHeaderGroupProps()} className="pl-2 pr-2 bg-scoreblue-100">
               {headerGroup.headers.map((column, index) => (
                 <div
                   key={index}
                   {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className="flex text-slate-200 font-semibold items-center pl-2 pr-2"
+                  className={`flex text-slate-200 font-semibold items-center pl-2 pr-2 border-t-4 border-b-4 border-transparent ${
+                    column.isSorted ? (column.isSortedDesc ? ' border-t-scoreyellow' : ' border-b-scoreyellow') : ''
+                  }`}
                 >
                   {column.render('Header')}
                 </div>
