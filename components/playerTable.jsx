@@ -34,11 +34,11 @@ function PlayerTable({ data, columns }) {
           {...row.getRowProps({
             style,
           })}
-          className="pl-2 pr-2"
+          className={`pl-2 pr-2 ${index % 2 === 0 && 'bg-scoreyellow/20'}`}
         >
           {row.cells.map((cell, index) => {
             return (
-              <div key={index} {...cell.getCellProps()} className="flex items-center pl-2 pr-2">
+              <div key={index} {...cell.getCellProps()} className="flex text-slate-800 items-center pl-2 pr-2">
                 {cell.render('Cell')}
               </div>
             )
@@ -49,18 +49,24 @@ function PlayerTable({ data, columns }) {
     [prepareRow, rows]
   )
 
-  const generateCsvData = () => rows.map(row => row.original)
-
   return (
-    <div className="w-full flex flex-col items-center">
-      <FilterInput setFilter={setFilter} filterName="name" label="Player Name" />
-      <ExportCSV rows={rows} />
-      <div {...getTableProps()} className="inline-block border border-black m-4 overflow-x-auto w-11/12 no-scrollbar">
+    <div className="w-full flex flex-col items-center font-sans">
+      <div className="flex justify-between items-center w-11/12 pt-9">
+        <FilterInput setFilter={setFilter} filterName="name" label="Player Name" />
+        <ExportCSV rows={rows} />
+      </div>
+      <div {...getTableProps()}
+        className="inline-block shadow-xl m-4 overflow-x-auto w-11/12 no-scrollbar rounded-t-xl border-b-scoreyellow border-b-4"
+      >
         <div>
           {headerGroups.map((headerGroup, index) => (
-            <div key={index} {...headerGroup.getHeaderGroupProps()} className="p-2 bg-slate-300">
+            <div key={index} {...headerGroup.getHeaderGroupProps()} className="p-2 bg-scoreblue-100">
               {headerGroup.headers.map((column, index) => (
-                <div key={index} {...column.getHeaderProps(column.getSortByToggleProps())} className="flex items-center pl-2 pr-2">
+                <div
+                  key={index}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  className="flex text-slate-200 font-semibold items-center pl-2 pr-2"
+                >
                   {column.render('Header')}
                 </div>
               ))}
