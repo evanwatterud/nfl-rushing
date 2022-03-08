@@ -49,10 +49,14 @@ function PlayerTable({ data, columns }) {
     [prepareRow, rows]
   )
 
+  const onFilterInputChange = (inputValue) => {
+    setFilter('name', value)
+  }
+
   return (
     <div className="w-full flex flex-col items-center font-sans">
       <div className="flex justify-between items-center w-11/12 pt-9">
-        <FilterInput setFilter={setFilter} filterName="name" label="Player Name" />
+        <FilterInput onChange={onFilterInputChange} placeholder="Player Name" debounceMS={300} />
         <ExportCSV rows={rows} />
       </div>
       <div {...getTableProps()}
