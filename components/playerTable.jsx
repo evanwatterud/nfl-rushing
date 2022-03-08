@@ -50,7 +50,7 @@ function PlayerTable({ data, columns }) {
   )
 
   const onFilterInputChange = (inputValue) => {
-    setFilter('name', value)
+    setFilter('name', inputValue)
   }
 
   return (
