@@ -63,6 +63,8 @@ docker-compose up -d
 ```
 to start the database container
 
+Use a node version manager of your choice to install and use node 16 or greater.
+
 Run
 ```bash
 npm install 
